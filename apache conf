@@ -1,0 +1,38 @@
+sudo nano /etc/apache2/sites-available/ncsi.gov.om.conf
+
+<VirtualHost *:80>
+ServerName ncsi.gov.om
+ProxyPreserveHost On
+ProxyPass / http://localhost:3000/
+ProxyPassReverse / http://localhost:3000/
+ErrorLog ${APACHE_LOG_DIR}/ncsi_error.log
+CustomLog ${APACHE_LOG_DIR}/ncsi_access.log combined
+</VirtualHost>
+--------------------------------------------------------------------
+
+sudo nano /etc/apache2/sites-available/backend.ncsi.gov.om.conf
+
+
+<VirtualHost *:80>
+ServerName backend.ncsi.gov.om
+ProxyPreserveHost On
+ProxyPass / http://localhost:3002/
+ProxyPassReverse / http://localhost:3002/
+ErrorLog ${APACHE_LOG_DIR}/backend_error.log
+CustomLog ${APACHE_LOG_DIR}/backend_access.log combined
+</VirtualHost>
+-------------------------------------------------------------------
+
+
+sudo nano /etc/apache2/sites-available/api.ncsi.gov.om.conf
+
+<VirtualHost *:80>
+ServerName api.ncsi.gov.om
+DocumentRoot /var/www/ncsiapi/public
+<Directory /var/www/ncsiapi/public>
+AllowOverride All
+Require all granted
+</Directory>
+ErrorLog ${APACHE_LOG_DIR}/api_error.log
+CustomLog ${APACHE_LOG_DIR}/api_access.log combined
+</VirtualHost>
