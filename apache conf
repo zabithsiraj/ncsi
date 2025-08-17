@@ -8,9 +8,63 @@ ProxyPassReverse / http://localhost:3000/
 ErrorLog ${APACHE_LOG_DIR}/ncsi_error.log
 CustomLog ${APACHE_LOG_DIR}/ncsi_access.log combined
 </VirtualHost>
+
+
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName ncsi.gov.om
+
+    # Proxy to Next.js app on localhost:3000
+    ProxyPreserveHost On
+    ProxyPass        / http://127.0.0.1:3000/
+    ProxyPassReverse / http://127.0.0.1:3000/
+
+    ErrorLog ${APACHE_LOG_DIR}/ncsi_ssl_error.log
+    CustomLog ${APACHE_LOG_DIR}/ncsi_ssl_access.log combined
+
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/ncsi.gov.om/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/ncsi.gov.om/privkey.pem
+    Include /etc/letsencrypt/options-ssl-apache.conf
+
+    # Security hardening
+    SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+    SSLCipherSuite HIGH:!aNULL:!MD5
+    SSLHonorCipherOrder on
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</VirtualHost>
+</IfModule>
+
 --------------------------------------------------------------------
 
 sudo nano /etc/apache2/sites-available/backend.ncsi.gov.om.conf
+
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName backend.ncsi.gov.om
+
+    # Proxy to React admin running on localhost:3002
+    ProxyPreserveHost On
+    ProxyPass        / http://127.0.0.1:3002/
+    ProxyPassReverse / http://127.0.0.1:3002/
+
+    ErrorLog ${APACHE_LOG_DIR}/backend_ssl_error.log
+    CustomLog ${APACHE_LOG_DIR}/backend_ssl_access.log combined
+
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/backend.ncsi.gov.om/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/backend.ncsi.gov.om/privkey.pem
+    Include /etc/letsencrypt/options-ssl-apache.conf
+
+    SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+    SSLCipherSuite HIGH:!aNULL:!MD5
+    SSLHonorCipherOrder on
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</VirtualHost>
+</IfModule>
+
 
 
 <VirtualHost *:80>
@@ -25,6 +79,41 @@ CustomLog ${APACHE_LOG_DIR}/backend_access.log combined
 
 
 sudo nano /etc/apache2/sites-available/api.ncsi.gov.om.conf
+
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName api.ncsi.gov.om
+    DocumentRoot /var/www/ncsiapi/public
+
+    <Directory /var/www/ncsiapi/public>
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
+    </Directory>
+
+    # Pass PHP to FPM
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/run/php/php8.2-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/api_ssl_error.log
+    CustomLog ${APACHE_LOG_DIR}/api_ssl_access.log combined
+
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/api.ncsi.gov.om/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/api.ncsi.gov.om/privkey.pem
+    Include /etc/letsencrypt/options-ssl-apache.conf
+
+    SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+    SSLCipherSuite HIGH:!aNULL:!MD5
+    SSLHonorCipherOrder on
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</VirtualHost>
+</IfModule>
+
+
+
 
 <VirtualHost *:80>
 ServerName api.ncsi.gov.om
