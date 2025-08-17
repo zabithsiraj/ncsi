@@ -1,0 +1,23 @@
+# 1. Extract private key
+openssl pkcs12 -in ncsi2025.pfx -nocerts -nodes -out ncsi2025.key
+
+# 2. Extract public certificate
+openssl pkcs12 -in ncsi2025.pfx -clcerts -nokeys -out ncsi2025.crt
+
+# 3. Extract CA chain (if included)
+openssl pkcs12 -in ncsi2025.pfx -cacerts -nokeys -out ncsi2025-ca.crt
+
+
+
+
+sudo mkdir -p /etc/ssl/ncsi2025
+sudo mv ncsi2025.key /etc/ssl/ncsi2025/
+sudo mv ncsi2025.crt /etc/ssl/ncsi2025/
+sudo mv ncsi2025-ca.crt /etc/ssl/ncsi2025/
+sudo chmod 600 /etc/ssl/ncsi2025/ncsi2025.key
+
+
+SSLEngine on
+SSLCertificateFile /etc/ssl/ncsi2025/ncsi2025.crt
+SSLCertificateKeyFile /etc/ssl/ncsi2025/ncsi2025.key
+SSLCertificateChainFile /etc/ssl/ncsi2025/ncsi2025-ca.crt
