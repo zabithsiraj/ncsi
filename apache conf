@@ -24,9 +24,9 @@ CustomLog ${APACHE_LOG_DIR}/ncsi_access.log combined
     CustomLog ${APACHE_LOG_DIR}/ncsi_ssl_access.log combined
 
     SSLEngine on
-    SSLCertificateFile /etc/letsencrypt/live/ncsi.gov.om/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/ncsi.gov.om/privkey.pem
-    Include /etc/letsencrypt/options-ssl-apache.conf
+   SSLCertificateFile /etc/ssl/ncsi2025/ncsi2025.crt
+SSLCertificateKeyFile /etc/ssl/ncsi2025/ncsi2025.key
+SSLCertificateChainFile /etc/ssl/ncsi2025/ncsi2025-ca.crt
 
     # Security hardening
     SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
@@ -54,9 +54,9 @@ sudo nano /etc/apache2/sites-available/backend.ncsi.gov.om.conf
     CustomLog ${APACHE_LOG_DIR}/backend_ssl_access.log combined
 
     SSLEngine on
-    SSLCertificateFile /etc/letsencrypt/live/backend.ncsi.gov.om/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/backend.ncsi.gov.om/privkey.pem
-    Include /etc/letsencrypt/options-ssl-apache.conf
+SSLCertificateFile /etc/ssl/ncsi2025/ncsi2025.crt
+SSLCertificateKeyFile /etc/ssl/ncsi2025/ncsi2025.key
+SSLCertificateChainFile /etc/ssl/ncsi2025/ncsi2025-ca.crt
 
     SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite HIGH:!aNULL:!MD5
@@ -101,9 +101,9 @@ sudo nano /etc/apache2/sites-available/api.ncsi.gov.om.conf
     CustomLog ${APACHE_LOG_DIR}/api_ssl_access.log combined
 
     SSLEngine on
-    SSLCertificateFile /etc/letsencrypt/live/api.ncsi.gov.om/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/api.ncsi.gov.om/privkey.pem
-    Include /etc/letsencrypt/options-ssl-apache.conf
+  SSLCertificateFile /etc/ssl/ncsi2025/ncsi2025.crt
+SSLCertificateKeyFile /etc/ssl/ncsi2025/ncsi2025.key
+SSLCertificateChainFile /etc/ssl/ncsi2025/ncsi2025-ca.crt
 
     SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite HIGH:!aNULL:!MD5
