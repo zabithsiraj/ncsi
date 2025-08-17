@@ -13,3 +13,8 @@ php8.2-mysql php8.2-xml php8.2-curl php8.2-zip php8.2-bcmath -y
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 sudo npm install -g pm2
+cd ~
+php -r "copy('https://getcomposer.org/installer',
+'composer-setup.php');"
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+composer --version
